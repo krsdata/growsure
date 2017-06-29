@@ -6,7 +6,12 @@ app.config(function ($routeProvider) {
     .when("/", {
         templateUrl: "app/views/dashboard.html"
     })
-    
+     .when("/about-us", {
+        templateUrl: "app/views/about.html"
+     })
+         .when("/contact-us", {
+             templateUrl: "app/views/contact.html"
+         })
     .otherwise({
         redirect: '/'
     });;

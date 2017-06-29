@@ -40,7 +40,7 @@ a.navbar-brand {
     height: auto;
     padding: 0;
     padding-top: 15px;
-	padding-bottom: 15px;
+    padding-bottom: 15px;
 }
 
 a.navbar-brand:hover {
@@ -57,7 +57,7 @@ a.navbar-brand:hover {
 }
 
 .navbar-nav > li > a {
-    line-height: 70px;
+    line-height: 91px;
     font-weight: 600;
     font-size: 14px;
     padding-top: 0;
@@ -88,15 +88,17 @@ a.navbar-brand:hover {
     z-index: 9999;
     padding: 0;
     margin: 0;
+
     position: absolute;
-    top: 70px;
-    right: -306px;
+    top: 95px;
+    left: -560px;
+
     width: auto;
     display: none;
     background-color: #FFF;
     border: 1px solid #C7C7C7;
     border-top: 2px solid #0D7CC9;
-    background: #E5E5E5
+    background: #202734;
 }
 
 .navbar-nav li ul li a {
@@ -125,7 +127,8 @@ a.navbar-brand:hover {
 
 .navbar-nav li ul li:hover a {
     padding-left: 20px;
-    padding-right: 10px
+    padding-right: 10px;
+    background: #fff;
 }
 
 .navbar-nav li ul li ul {
@@ -2399,6 +2402,7 @@ ul.subtitle-list li:first-child .time {
 .promo-box-03-inner {
     position: relative;
     padding: 120px 80px;
+
 }
 
 .promo-box-03 p {
@@ -2616,6 +2620,7 @@ a.category-item:hover {
     padding-left: 90px;
     border-radius: 3px;
 }
+
 
 .alt-2 .category-item .icon {
     top: 0;
@@ -5186,6 +5191,7 @@ ul.static-page-menu li.active a {
     transition: all 0.3s ease;
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
+
     position: relative;
     margin: 0 0 15px;
 }
@@ -6576,4 +6582,7 @@ padding:50px 0px;
 .padding-right
 {
 padding-right:30px !important;
+}
+ul.more-padding h5 {
+    color: #eee;
 }

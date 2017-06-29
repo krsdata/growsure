@@ -82,15 +82,35 @@
     <Content Include="app\images\inner-banner.jpg" />
     <Content Include="app\images\logo.jpg" />
     <Content Include="app\images\logo.png" />
+    <Content Include="app\images\logo_growsure_final.png" />
     <Content Include="app\images\main-banner.jpg" />
     <Content Include="app\images\real.jpg" />
     <Content Include="app\images\teacher-bg.jpg" />
     <Content Include="app\images\watch.jpg" />
     <Content Include="app\js\angular-route.js" />
     <Content Include="app\js\angular.js" />
+    <Content Include="app\js\bootstrap-modal.js" />
+    <Content Include="app\js\bootstrap-modalmanager.js" />
+    <Content Include="app\js\bootstrap-rating.js" />
     <Content Include="app\js\bootstrap.min.js" />
+    <Content Include="app\js\creditly.js" />
     <Content Include="app\js\customs.js" />
+    <Content Include="app\js\ion.rangeSlider.min.js" />
     <Content Include="app\js\jquery-2.2.4.min.js" />
+    <Content Include="app\js\jquery-migrate-1.4.1.min.js" />
+    <Content Include="app\js\jquery.easing.1.3.js" />
+    <Content Include="app\js\jquery.introLoader.min.js" />
+    <Content Include="app\js\jquery.nicescroll.min.js" />
+    <Content Include="app\js\jquery.placeholder.min.js" />
+    <Content Include="app\js\jquery.slicknav.min.js" />
+    <Content Include="app\js\jquery.waypoints.min.js" />
+    <Content Include="app\js\placeholderTypewriter.js" />
+    <Content Include="app\js\readmore.min.js" />
+    <Content Include="app\js\select2.full.js" />
+    <Content Include="app\js\slick.min.js" />
+    <Content Include="app\js\SmoothScroll.min.js" />
+    <Content Include="app\js\spin.min.js" />
+    <Content Include="app\js\typed.js" />
     <Content Include="app\views\about.html" />
     <Content Include="app\views\blog-single.html" />
     <Content Include="app\views\blog.html" />
@@ -104,6 +124,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app\js\jquery-2.2.4.min" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
