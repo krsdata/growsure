@@ -27,11 +27,13 @@ Route::get('/', function () {
 Route::group(['prefix' => 'api/v1'], function()
 {   
     Route::group(['middleware' => 'api'], function () {
-        Route::match(['post','get'],'user/register','ApiController@register');  
-        Route::match(['post','get'],'user/updateProfile/{user_id}','ApiController@updateProfile'); 
+        Route::match(['post','get'],'contactus','ApiController@contactUs');  
+        
+        Route::match(['post','get'],'user/signup','ApiController@register');  
+        Route::match(['post','get'],'user/updateProfile','ApiController@updateProfile'); 
         Route::match(['post','get'],'user/login', 'ApiController@login'); 
-        Route::match(['post','get'],'email-verification','ApiController@emailVerification');  
-        Route::match(['post','get'],'forget-password','ApiController@forgetPassword');  
+        Route::match(['post','get'],'email_verification','ApiController@emailVerification');   
+        Route::match(['post','get'],'user/forgotPassword','ApiController@forgetPassword');  
         Route::match(['post','get'],'validate_user','ApiController@validateUser');
         Route::group(['middleware' => 'jwt-auth'], function () 
         { 
