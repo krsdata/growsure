@@ -28,7 +28,12 @@ Route::group(['prefix' => 'api/v1'], function()
 {   
     Route::group(['middleware' => 'api'], function () {
         Route::match(['post','get'],'contactus','ApiController@contactUs');  
+        Route::match(['post','get'],'createCourse','ApiController@createCourse');  
+        Route::match(['post','get'],'getCourse','ApiController@getCourse');  
+        Route::match(['post','get'],'createCourseDetails','ApiController@createCourseDetails');  
+        Route::match(['post','get'],'getCourseDetails','ApiController@getCourseDetails');  
         
+
         Route::match(['post','get'],'user/signup','ApiController@register');  
         Route::match(['post','get'],'user/updateProfile','ApiController@updateProfile'); 
         Route::match(['post','get'],'user/login', 'ApiController@login'); 

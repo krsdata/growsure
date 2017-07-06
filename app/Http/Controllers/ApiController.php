@@ -16,6 +16,8 @@ use JWTExceptionTokenInvalidException;
 use App\Helpers\Helper as Helper;
 use App\User; 
 use App\ContactUs;
+use App\Course;
+use App\Syllabus;
 
 
 class ApiController extends Controller
@@ -310,11 +312,151 @@ class ApiController extends Controller
         return response()->json([ "status"=>1,"code"=>200,"message"=>"Successfully logged in." ,'data' => $data ]);
 
     } 
+   
+
+    public function createCourse( Request $request , Course $course)
+    {
+         
+        $course = new Course;
+        $course->main_course = $request->get('main_course');
+         //Server side valiation
+        $validator = Validator::make($request->all(), [
+           'main_course' => 'required|unique:courses'
+        ]);
+        /** Return Error Message **/
+        if ($validator->fails()) {
+                    $error_msg  =   [];
+            foreach ( $validator->messages()->all() as $key => $value) {
+                        array_push($error_msg, $value);     
+                    }
+                            
+            return Response::json(array(
+                'status' => 0,
+                'message' => $error_msg[0],
+                'data'  =>  ''
+                )
+            );
+        }  
+
+
+        $course->save(); 
+        $main_course_id =  $course->id;
+        
+        $sub_course = $request->get('sub_course');  
+
+        foreach ($sub_course as $key => $result) {
+
+            $course = new Course;
+            $course->main_course =  $request->get('main_course');
+            $course->sub_course  = $result;
+            $course->parent_id = $main_course_id;
+            $course->save();
+        }
+
+        $courses =  Course::where('parent_id',$main_course_id)->get();
+
+        $data['main_course'] = $request->get('main_course');
+
+        foreach ($courses as $key => $value) {
+
+            $data['sub_course'][] = [ 'id' => $value->id, 'name' => $value->sub_course];
+        }
+
+        
+       return response()->json(
+                    [   
+                        "status"    =>  1,
+                        "code" => 200,
+                        "message"   =>  "Course Created" ,
+                        'data'      =>  $data
+                    ]
+                ); 
+    }
+
+    public function getCourse( Request $request , Course $course)
+    {
+        $courses =  Course::where('parent_id',0)->get();
+
+        $result = [];
+        foreach ($courses as $key => $value) {
+            $subcourses =  Course::where('parent_id',$value->id)->get();
+            $data['main_course_id'] = $value->id;
+            $data['main_course'] = $value->main_course;
+            
+            foreach ($subcourses as $key => $subc) {
+                $data['sub_course'][] = [ 'sub_course_id' => $subc->id, 'name' => $subc->sub_course];
+            }
+
+            $result[] = $data;
+            
+        }
+       return response()->json(
+                    [   
+                        "status"    =>  1,
+                        "code" => 200,
+                        "message"   =>  "Course found" ,
+                        'data'      =>  $result
+                    ]
+                ); 
+    }
+
+     public function createCourseDetails( Request $request , Course $course)
+    {
+        
+
+        $main_course_id = $request->get('main_course_id');
+        $sub_course_id  = $request->get('sub_course_id');
+
+        $course = Course::where('id',$sub_course_id)
+                            ->where('parent_id',$main_course_id)
+                            ->first();
+
+        $course->description = $request->get('description');
+        $course->image = ''; //$request->get('image');
+        $course->course_prerequisites= $request->get('course_prerequisites');
+        $course->course_duration = $request->get('course_duration');
+        $course->training_highlights = $request->get('training_highlights');
+
+        $course->save();
+        
+
+
+        $courses =  Course::where('parent_id',0)->get();
+
+
+
+
+        $result = [];
+        foreach ($courses as $key => $value) {
+            $subcourses =  Course::where('parent_id',$value->id)->get();
+            $data['main_course_id'] = $value->id;
+            $data['main_course'] = $value->main_course;
+            
+            foreach ($subcourses as $key => $subc) {
+                $data['sub_course'][] = [ 'sub_course_id' => $subc->id, 'name' => $subc->sub_course];
+            }
+
+            $result[] = $data;
+            
+        }
+       return response()->json(
+                    [   
+                        "status"    =>  1,
+                        "code" => 200,
+                        "message"   =>  "Course found" ,
+                        'data'      =>  $result
+                    ]
+                ); 
+    }
+
+
    /* @method : get user details
     * @param : Token and deviceID
     * Response : json
     * Return : User details 
    */
+
+
    
     public function getUserDetails(Request $request)
     {
