@@ -411,6 +411,17 @@ class ApiController extends Controller
                             ->where('parent_id',$main_course_id)
                             ->first();
 
+        if(count($course)==0) {
+            return response()->json(
+                    [   
+                        "status"    =>  0,
+                        "code" => 500,
+                        "message"   =>  "Invalid course id" ,
+                        'data'      =>  []
+                    ]
+                ); 
+        }                    
+
         $course->description = $request->get('description');
         $course->image = ''; //$request->get('image');
         $course->course_prerequisites= $request->get('course_prerequisites');
