@@ -418,33 +418,27 @@ class ApiController extends Controller
         $course->training_highlights = $request->get('training_highlights');
 
         $course->save();
+
+
+        $syllabus = new Syllabus;
+        $syllabus->chapter_name = $request->get('chapter_name');
+        $syllabus->chapter_topic = $request->get('chapter_topic');
+        $syllabus->sub_course_id = $request->get('sub_course_id');
+        $syllabus->course_id = $request->get('main_course_id');
+        $syllabus->description = $request->get('description');
+        $syllabus->save();
+
+         $courses = Course::leftjoin('syllabus', 'courses.id', '=', 'syllabus.sub_course_id')
+                            ->where('courses.id',$sub_course_id) 
+                            ->first(); 
+
         
-
-
-        $courses =  Course::where('parent_id',0)->get();
-
-
-
-
-        $result = [];
-        foreach ($courses as $key => $value) {
-            $subcourses =  Course::where('parent_id',$value->id)->get();
-            $data['main_course_id'] = $value->id;
-            $data['main_course'] = $value->main_course;
-            
-            foreach ($subcourses as $key => $subc) {
-                $data['sub_course'][] = [ 'sub_course_id' => $subc->id, 'name' => $subc->sub_course];
-            }
-
-            $result[] = $data;
-            
-        }
        return response()->json(
                     [   
                         "status"    =>  1,
                         "code" => 200,
                         "message"   =>  "Course found" ,
-                        'data'      =>  $result
+                        'data'      =>  $courses
                     ]
                 ); 
     }
