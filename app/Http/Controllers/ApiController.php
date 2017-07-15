@@ -388,6 +388,7 @@ class ApiController extends Controller
             }
 
             $result[] = $data;
+            $data['sub_course'] = [];
             
         }
        return response()->json(
@@ -789,6 +790,12 @@ class ApiController extends Controller
                    ]
                 );
 
+    }
+
+
+    public function deleteCourse(Request $request)
+    {
+        $request = $request->all();
     }
     
 } 
