@@ -461,9 +461,8 @@ class ApiController extends Controller
     	$sub_course_id = $request->get('sub_course_id');
     	$courses = Course::leftjoin('syllabus', 'courses.id', '=', 'syllabus.sub_course_id')
                             ->where('courses.id',$sub_course_id) 
-                            ->first(); 
-
-        if($courses){
+                            ->first();  
+        if($courses!=null){
         	$msg = "record found";
         	$code = 200;
         	$status =1;
@@ -475,9 +474,9 @@ class ApiController extends Controller
 
     	 return response()->json(
                     [   
-                        "status"    =>  1,
-                        "code" => 200,
-                        "message"   =>  "Course details found" ,
+                        "status"    =>  $status,
+                        "code" => $code,
+                        "message"   =>  $msg,
                         'data'      =>  $courses
                     ]
                 ); 
