@@ -34,7 +34,9 @@ Route::match(['post','get'],'course/delete','ApiController@deleteCourse');
 
         Route::match(['post','get'],'createCourseDetails','ApiController@createCourseDetails');  
 
- Route::match(['post','get'],'createCourseDetails','ApiController@createCourseDetails'); 
+
+        Route::match(['post','get'],'getCourseDetail','ApiController@getCourseDetail'); 
+
         Route::match(['post','get'],'courseDetail/delete','ApiController@deleteCourseDetail');  
         
 

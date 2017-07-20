@@ -401,7 +401,7 @@ class ApiController extends Controller
                 ); 
     }
 
-     public function createCourseDetails( Request $request , Course $course)
+    public function createCourseDetails( Request $request , Course $course)
     {
         
 
@@ -456,33 +456,24 @@ class ApiController extends Controller
     }
 
 
-   /* @method : get user details
-    * @param : Token and deviceID
-    * Response : json
-    * Return : User details 
-   */
-
-
-   
-    public function getUserDetails(Request $request)
+    public function getCourseDetail( Request $request , Course $course)
     {
-        $user = JWTAuth::toUser($request->input('token'));
-        $data = [];
-        $data['userId']         = $user->id;
-        $data['name']           = $user->name;
-        $data['email']          = $user->email;
-        $data['roleType']       = ($user->role_type==1)?"professor":"student";
-       
-         
+    	$sub_course_id = $request->get('sub_course_id');
+    	$courses = Course::leftjoin('syllabus', 'courses.id', '=', 'syllabus.sub_course_id')
+                            ->where('courses.id',$sub_course_id) 
+                            ->first(); 
+    	 return response()->json(
+                    [   
+                        "status"    =>  1,
+                        "code" => 200,
+                        "message"   =>  "Course details found" ,
+                        'data'      =>  $courses
+                    ]
+                ); 
 
-        return response()->json(
-                [ "status"=>1,
-                  "code"=>200,
-                  "message"=>"Record found successfully." ,
-                  "data" => $data 
-                ]
-            ); 
+
     }
+ 
    /* @method : Email Verification
     * @param : token_id
     * Response : json
@@ -653,144 +644,10 @@ class ApiController extends Controller
                 )
             );
         }         
+    
     }
- 
-    /*SORTING*/
-    public function array_msort($array, $cols)
-    {
-    $colarr = array();
-    foreach ($cols as $col => $order) {
-        $colarr[$col] = array();
-        foreach ($array as $k => $row) { $colarr[$col]['_'.$k] = strtolower($row[$col]); }
-    }
-    $eval = 'array_multisort(';
-    foreach ($cols as $col => $order) {
-        $eval .= '$colarr[\''.$col.'\'],'.$order.',';
-    }
-    $eval = substr($eval,0,-1).');';
-    eval($eval);
-    $ret = array();
-    foreach ($colarr as $col => $arr) {
-        foreach ($arr as $k => $v) {
-            $k = substr($k,1);
-            if (!isset($ret[$k])) $ret[$k] = $array[$k];
-            $ret[$k][$col] = $array[$k][$col];
-        }
-    }
-    return $ret;
-
-}
-   /* @method : Get Condidate rating
-    * @param : Interviewer ID
-    * Response : json
-    * Return :   getCondidateRecord
-    */
-    public function get_condidate_record(Request $request, Interview $interview)
-    {   
-        $condidate_id   =  $request->input('directoryID');
-        $condidate_name =  Helper::getCondidateNameByID($condidate_id);
-        if($condidate_name==null){
-            return  json_encode(
-                        [  
-                            "status"=>0,
-                            "code"=> 404,
-                            "message"=>"Record not found", 
-                            'data' => ""
-                        ] 
-                    );  
-        }
-        $interview_data     =  InterviewRating::where('condidateID',$condidate_id)->get();
-        $interview_details  = [];
-        $c_details          = Interview::find($condidate_id);
-        $interviewerComment = [];
-        $date           = \Carbon\Carbon::parse($c_details->created_at)->format('m/d/Y');
-       /* $date_diff      = \Carbon\Carbon::parse('27-07-2016')->diffForHumans();  
-        $is_tomorrow    = \Carbon\Carbon::parse('28-07-2016')->isTomorrow();
-        $is_today       = \Carbon\Carbon::parse('28-07-2016')->isTomorrow();
-       */
-        if($interview_data->count()>0){
-            $interview_criteriaID =[];
-            foreach ($interview_data as $key => $result) {
-
-                $rating_value    = str_getcsv($result->rating_value);
-                $interviewerName = Helper::getUserDetails($result->interviewerID);
-                
-                if( !empty($result->comment))
-                {
-                  $interviewerComment[]  =[
-                            'firstName' => $interviewerName['firstName'],
-                            'lastName'  => $interviewerName['lastName'],
-                            'comment'   => $result->comment];
-                }    
-                
-                $interview_details[]   =  Helper::getCriteriaById(str_getcsv($result->interview_criteriaID),$rating_value,$interviewerName,$result->comment); 
-                 
-            }
-        }else{ 
-             return  response()->json([  
-                            "status"=>1,
-                            "code"=> 200,
-                            "message"=>"Record found successfully.",  
-                            "data"  =>  array(
-                                "date"=>$date,
-                                "details"=>$interview_details,
-                                "comment"=>$interviewerComment,
-                                ) 
-                        ] 
-                    );  
-        } 
-        return  response()->json([ 
-                    "status"=>1,
-                    "code"=> 200, 
-                    "message"=>"Record found successfully.",  
-                    "data"  =>  array(
-                        "date"=>$date,
-                        "details"=>$interview_details,
-                        "comment"=>$interviewerComment,
-                        )  
-                    ]    
-                );  
-
-         // "comment" => $comment,
-                               // "ratingDetail"=>$interview_details]
-    }
- 
+    
   
-    public function InviteUser(Request $request,InviteUser $inviteUser)
-    {   
-        $user =   $inviteUser->fill($request->all()); 
-       
-        $user_id = $request->input('userID'); 
-        $invited_user = User::find($user_id); 
-        
-        $user_first_name = $invited_user->first_name ;
-        $download_link = "http://google.com";
-        $user_email = $request->input('email');
-
-        $helper = new Helper;
-        $cUrl =$helper->getCompanyUrl($user_email);
-        $user->company_url = $cUrl; 
-        /** --Send Mail after Sign Up-- **/
-        
-        $user_data     = User::find($user_id); 
-        $sender_name     = $user_data->first_name;
-        $invited_by    = $invited_user->first_name.' '.$invited_user->last_name;
-        $receipent_name = "User";
-        $subject       = ucfirst($sender_name)." has invited you to join";   
-        $email_content = array('receipent_email'=> $user_email,'subject'=>$subject,'name'=>'User','invite_by'=>$invited_by,'receipent_name'=>ucwords($receipent_name));
-        $helper = new Helper;
-        $invite_notification_mail = $helper->sendNotificationMail($email_content,'invite_notification_mail',['name'=> 'User']);
-        $user->save();
-
-        return  response()->json([ 
-                    "status"=>1,
-                    "code"=> 200,
-                    "message"=>"You've invited your colleague, nice work!",
-                    'data' => ['receipentEmail'=>$user_email]
-                   ]
-                );
-
-    }
 
 
     public function deleteCourse(Request $request)
