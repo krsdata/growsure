@@ -424,7 +424,7 @@ class ApiController extends Controller
         }                    
 
         $course->description = $request->get('description');
-        $course->image = ''; //$request->get('image');
+        $course->image = $request->get('image');
         $course->course_prerequisites= $request->get('course_prerequisites');
         $course->course_duration = $request->get('course_duration');
         $course->training_highlights = $request->get('training_highlights');
