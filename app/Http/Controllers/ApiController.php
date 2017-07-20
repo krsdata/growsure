@@ -95,7 +95,7 @@ class ApiController extends Controller
                             ]
                         );  
     }   
-     public function contactUs(Request $request,User $user)
+    public function contactUs(Request $request,User $user)
     {   
 
         $input['name']    = $request->input('name'); 
@@ -795,7 +795,34 @@ class ApiController extends Controller
 
     public function deleteCourse(Request $request)
     {
-        $request = $request->all();
+        $id = $request->get('main_course_id');
+        $deleteCourse = Course::where('id',$id)->delete();
+        $deleteCourse = Course::where('parent_id',$id)->delete();
+
+         return  response()->json([ 
+                    "status"=>1,
+                    "code"=> 200,
+                    "message"=>"Cource deleted successfully",
+                    'data' => ''
+                   ]
+                );
+
+    }
+
+    public function deleteCourseDetail(Request $request)
+    {
+        $id = $request->get('sub_course_id');
+        $deleteCourse = Course::where('id',$id)->delete();
+        //$deleteCourse = Course::where('parent_id',$id)->delete();
+
+         return  response()->json([ 
+                    "status"=>1,
+                    "code"=> 200,
+                    "message"=>"Sub Cource  deleted successfully",
+                    'data' => ''
+                   ]
+                );
+
     }
     
 } 
