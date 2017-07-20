@@ -812,8 +812,11 @@ class ApiController extends Controller
     public function deleteCourseDetail(Request $request)
     {
         $id = $request->get('sub_course_id');
-        $deleteCourse = Course::where('id',$id)->delete();
-        //$deleteCourse = Course::where('parent_id',$id)->delete();
+        $parent_id = $request->get('main_course_id');
+
+        $deleteCourse = Course::where('id',$id)
+        				->where('parent_id',$parent_id)
+        				->delete();
 
          return  response()->json([ 
                     "status"=>1,
