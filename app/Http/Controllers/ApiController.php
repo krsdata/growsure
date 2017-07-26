@@ -428,7 +428,7 @@ class ApiController extends Controller
         $course->course_prerequisites= $request->get('course_prerequisites');
         $course->course_duration = $request->get('course_duration');
         $course->training_highlights = $request->get('training_highlights');
-
+        $course->general_info = json_encode($request->get('general_info'));
         $course->save();
 
 
