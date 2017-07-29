@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Lang;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use PHPMailerAutoload;
 use PHPMailer; 
+use Course;
 
 class Helper {
 
@@ -40,36 +41,6 @@ class Helper {
 
          return $key;
     } 
-/* @method : createCompanyGroup
-    * @param : email,user_id
-    * Response :  string
-    * Return : company name
-    */
-    
-/* @method : getCorporateGroupName
-    * @param : email
-    * Response :  string
-    * Return : company name
-    */
-    public function getCorporateGroupName($email=null)
-    {
-        $fps =  strripos($email,"@");
-        $lps =  strpos(substr($email,$fps),".");
-        $company_name = substr($email,$fps+1,$lps-1);
-        return  $company_name;       
-    } 
-/* @method : getCompanyUrl
-    * @param : email
-    * Response :  string
-    * Return : company URL
-    */
-    public function getCompanyUrl($email=null)
-    {   
-        $fps =  strripos($email,"@");
-        $lps =  strpos(substr($email,$fps),".");
-        $company_url = substr($email,$fps+1);
-        return  $company_url;       
-    }
 
  
 /* @method : isUserExist
@@ -81,6 +52,29 @@ class Helper {
     {
         $user = User::where('id',$user_id)->count(); 
         return $user;
+    }
+
+
+/* @method : course
+    * @param : cid
+    * Response : number
+    * Return : count
+    */
+    static public function getCourseById($cid=null)
+    {
+        $c = Course::find($cid); 
+        return $c;
+    }
+ 
+/* @method : SubCousre
+    * @param : scid
+    * Response : number
+    * Return : count
+    */
+    static public function getSubCourseById($scid=null)
+    {
+        $sc = Course::where('parent_id',$scid)->get(); 
+        return $sc;
     }
  
 /* @method : getpassword

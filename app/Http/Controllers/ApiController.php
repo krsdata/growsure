@@ -373,9 +373,14 @@ class ApiController extends Controller
                 ); 
     }
 
-    public function getCourse( Request $request , Course $course)
+    public function getCourse( Request $request , Course $course,$id=null)
     {
-        $courses =  Course::where('parent_id',0)->get();
+        $courses =  Course::where('parent_id',0)->where(function($q)use($id){
+            if($id){
+                 $q->where('id',$id);
+            }
+           
+        })->get();
 
         $result = [];
         foreach ($courses as $key => $value) {
@@ -404,7 +409,6 @@ class ApiController extends Controller
     public function createCourseDetails( Request $request , Course $course)
     {
         
-
         $main_course_id = $request->get('main_course_id');
         $sub_course_id  = $request->get('sub_course_id');
 
@@ -456,28 +460,31 @@ class ApiController extends Controller
     }
 
 
-    public function getCourseDetail( Request $request , Course $course)
+    public function getCourseDetail( Request $request , Course $course,$id=null)
     {
-    	$sub_course_id = $request->get('sub_course_id');
+        $sub_course_id = $request->get('sub_course_id');
     	$courses = Course::leftjoin('syllabus', 'courses.id', '=', 'syllabus.sub_course_id')
-                            ->where('courses.id',$sub_course_id) 
+                            ->where('courses.id',$id) 
                             ->first();  
         if($courses!=null){
-        	$msg = "record found";
+        	$msg = "Record found";
         	$code = 200;
         	$status =1;
+            $data = $courses;
         }else{
         	$msg = "record not found";
-        	$code = 500;
+        	$code = 404;
         	$status =0;
+            $data = ['sub_course_id'=>$id];
         }
+        
 
     	 return response()->json(
                     [   
                         "status"    =>  $status,
-                        "code" => $code,
+                        "code"      =>  $code,
                         "message"   =>  $msg,
-                        'data'      =>  $courses
+                        'data'      =>  $data
                     ]
                 ); 
 

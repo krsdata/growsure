@@ -29,13 +29,14 @@ Route::group(['prefix' => 'api/v1'], function()
     Route::group(['middleware' => 'api'], function () {
         Route::match(['post','get'],'contactus','ApiController@contactUs');  
         Route::match(['post','get'],'createCourse','ApiController@createCourse');  
-        Route::match(['post','get'],'getCourse','ApiController@getCourse');  
+        Route::match(['post','get'],'getCourse/{id}','ApiController@getCourse');  
+         Route::match(['post','get'],'getCourse','ApiController@getCourse'); 
 Route::match(['post','get'],'course/delete/{id}','ApiController@deleteCourse')->where('id', '[0-9]+'); 
 
         Route::match(['post','get'],'createCourseDetails','ApiController@createCourseDetails');  
 
 
-        Route::match(['post','get'],'getCourseDetail','ApiController@getCourseDetail'); 
+        Route::match(['post','get'],'getCourseDetail/{id}','ApiController@getCourseDetail')->where('id', '[0-9]+'); 
 
         Route::match(['post','get'],'courseDetail/delete/{cid}/{scid}','ApiController@deleteCourseDetail')->where(['cid' => '[0-9]+', 'scid' => '[0-9]+']);
         
