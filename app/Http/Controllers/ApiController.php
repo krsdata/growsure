@@ -660,38 +660,61 @@ class ApiController extends Controller
   
 
 
-    public function deleteCourse(Request $request)
+    public function deleteCourse(Request $request,$id)
     {
-        $id = $request->get('main_course_id');
+ 
         $deleteCourse = Course::where('id',$id)->delete();
-        $deleteCourse = Course::where('parent_id',$id)->delete();
-
-         return  response()->json([ 
+        if($deleteCourse){
+            $deleteCourse = Course::where('parent_id',$id)->delete();
+            return  response()->json([ 
                     "status"=>1,
                     "code"=> 200,
-                    "message"=>"Cource deleted successfully",
+                    "message"=>"Cource deleted successfully.",
                     'data' => ''
                    ]
                 );
 
+        } else {
+            return  response()->json([ 
+                    "status"=>0,
+                    "code"=> 500,
+                    "message"=>"Cource Id does not available in database!",
+                    'data' => ['main_course_id'=>$id]
+                   ]
+                );
+
+        }
+
+         
+
     }
 
-    public function deleteCourseDetail(Request $request)
+    public function deleteCourseDetail(Request $request,$cid,$scid)
     {
-        $id = $request->get('sub_course_id');
-        $parent_id = $request->get('main_course_id');
 
-        $deleteCourse = Course::where('id',$id)
-        				->where('parent_id',$parent_id)
-        				->delete();
+        $deleteCourse = Course::where('id',$scid)
+        				->where('parent_id',$cid)->get();
 
-         return  response()->json([ 
+       if($deleteCourse->count()){
+             return  response()->json([ 
                     "status"=>1,
                     "code"=> 200,
                     "message"=>"Sub Cource  deleted successfully",
                     'data' => ''
                    ]
                 );
+       } else {
+             return  response()->json([ 
+                    "status"=>0,
+                    "code"=> 500,
+                    "message"=>"main_course_id or sub_course_id does not matched",
+                    'data' => ''
+                   ]
+                );
+       }               
+        				
+
+        
 
     }
     

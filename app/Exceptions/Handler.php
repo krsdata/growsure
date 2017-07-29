@@ -75,12 +75,12 @@ class Handler extends ExceptionHandler
                 echo json_encode(
                     [ "status"=>0,
                       "code"=>500,
-                      "message"=>"Route Not defind" ,
+                      "message"=>"Invalid url!" ,
                       "data" => "" 
                     ]
                 );
             }else{
-                echo "This Route Not define";
+                echo "Invalid url!";
             } 
             exit(); 
         }    
@@ -96,8 +96,8 @@ class Handler extends ExceptionHandler
                 echo json_encode(
                     [ "status"=>0,
                       "code"=>500,
-                      "message"=>"Request URL not available" ,
-                      "data" => "" 
+                      "message"=>['error'=>'Invalid Url!','url'=>url($request->getpathInfo())] ,
+                      "data" => []
                     ]
                 );
             }else{
