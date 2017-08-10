@@ -27,6 +27,7 @@ Route::get('/', function () {
 Route::group(['prefix' => 'api/v1'], function()
 {   
     Route::group(['middleware' => 'api'], function () {
+
         Route::match(['post','get'],'contactus','ApiController@contactUs');  
         Route::match(['post','get'],'createCourse','ApiController@createCourse');  
         Route::match(['post','get'],'getCourse/{id}','ApiController@getCourse');  

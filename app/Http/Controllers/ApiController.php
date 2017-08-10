@@ -465,6 +465,8 @@ class ApiController extends Controller
         $sub_course_id = $request->get('sub_course_id');
     	$courses = Course::leftjoin('syllabus', 'courses.id', '=', 'syllabus.sub_course_id')
                             ->where('courses.id',$id) 
+                            ->select('courses.*', 'syllabus.description')
+                            ->except('status')
                             ->first();  
         if($courses!=null){
         	$msg = "Record found";
@@ -477,7 +479,7 @@ class ApiController extends Controller
         	$status =0;
             $data = ['sub_course_id'=>$id];
         }
-        
+
 
     	 return response()->json(
                     [   
@@ -704,6 +706,8 @@ class ApiController extends Controller
         				->where('parent_id',$cid)->get();
 
        if($deleteCourse->count()){
+        Course::where('id',$scid)
+                        ->where('parent_id',$cid)->delete();
              return  response()->json([ 
                     "status"=>1,
                     "code"=> 200,
