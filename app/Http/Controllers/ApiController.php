@@ -827,11 +827,15 @@ class ApiController extends Controller
     public function getBlog(Request $request){
 
         $blog_course_id= $request->get('blog_course_id');
+        $id= $request->get('id');
 
         $blog = Blogs::with('courceDetail')
-                ->where(function($query)use($blog_course_id){
+                ->where(function($query)use($blog_course_id,$id){
                     if($blog_course_id){
                           $query->where('blog_course_id',$blog_course_id);
+                    }
+                     if($id){
+                          $query->where('id',$id);
                     }
                   
                 })->get();
