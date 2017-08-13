@@ -18,6 +18,7 @@ use App\User;
 use App\ContactUs;
 use App\Course;
 use App\Syllabus;
+use App\Blogs;
 
 
 class ApiController extends Controller
@@ -723,11 +724,139 @@ class ApiController extends Controller
                     'data' => ''
                    ]
                 );
-       }               
-        				
+       } 
 
+    }
+
+    public function createBlog(Request $request, $id=null)
+    {
+        $blog = new Blogs;
+
+        $table_cname = \Schema::getColumnListing('blogs');
+
+         
+        $validator = Validator::make($request->all(), [
+            'blog_title' => 'required' 
+        ]); 
         
+       
+        // Return Error Message
+        if ($validator->fails()) {
+                    $error_msg  =   [];
+            foreach ( $validator->messages()->all() as $key => $value) {
+                        array_push($error_msg, $value);     
+                    }
+                            
+            return Response::json(array(
+                'status' => 0,
+                 'code' => 500,
+                'message' => $error_msg[0],
+                'data'  =>  []
+                )
+            );
+        }
 
+
+
+        $except = ['id','create_at','updated_at'];
+        foreach ($table_cname as $key => $value) {
+           
+           if(in_array($value, $except )){
+                continue;
+           }
+
+           $blog->$value = $request->get($value);
+        }
+
+        $blog->save();
+
+       return  response()->json([ 
+                    "status"=>1,
+                    "code"=> 200,
+                    "message"=>"Blog created successfully.",
+                    'data' => $blog
+                   ]
+                );
+
+
+    }
+    public function updateBlog(Request $request, $id=null)
+    {
+        $blog = Blogs::find($id);
+
+        if($blog==null)
+        {
+            return  response()->json([ 
+                    "status"=>0,
+                    "code"=> 500,
+                    "message"=>"Blog id is invalid",
+                    'data' => ['id'=>$id]
+                   ]
+                );
+        }
+
+        $table_cname = \Schema::getColumnListing('blogs');
+
+        $except = ['id','create_at','updated_at'];
+
+        $input = $request->all();
+
+        foreach ($table_cname as $key => $value) {
+           
+           if(in_array($value, $except )){
+                continue;
+           }
+
+           if(isset($input[$value])) {
+               $blog->$value = $request->get($value); 
+           } 
+        }
+
+        $blog->save();
+
+       return  response()->json([ 
+                    "status"=>1,
+                    "code"=> 200,
+                    "message"=>"Blog updated successfully.",
+                    'data' => $blog
+                   ]
+                );
+
+
+    }
+    public function getBlog(Request $request){
+
+        $blog_course_id= $request->get('blog_course_id');
+
+        $blog = Blogs::with('courceDetail')
+                ->where(function($query)use($blog_course_id){
+                    if($blog_course_id){
+                          $query->where('blog_course_id',$blog_course_id);
+                    }
+                  
+                })->get();
+
+        return  response()->json([ 
+                    "status"=>1,
+                    "code"=> 200,
+                    "message"=>"Blog list",
+                    'data' => $blog
+                   ]
+                );
+
+    }
+
+    public function deleteBlog($id=null)
+    {
+        $blog = Blogs::where('id',$id)->delete();
+
+        return  response()->json([ 
+                    "status"=>1,
+                    "code"=> 200,
+                    "message"=>"Blog deleted successfully.",
+                    'data' => []
+                   ]
+                );
     }
     
 } 

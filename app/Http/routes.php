@@ -27,12 +27,17 @@ Route::get('/', function () {
 Route::group(['prefix' => 'api/v1'], function()
 {   
     Route::group(['middleware' => 'api'], function () {
-
+        Route::match(['post','get'],'blog/create','ApiController@createBlog'); 
+        Route::match(['post','get'],'getBlog','ApiController@getBlog'); 
+        Route::match(['post','get'],'blog/delete/{id}','ApiController@deleteBlog'); 
+        Route::match(['post','get'],'blog/update/{id}','ApiController@updateBlog'); 
+        
+        
         Route::match(['post','get'],'contactus','ApiController@contactUs');  
         Route::match(['post','get'],'createCourse','ApiController@createCourse');  
         Route::match(['post','get'],'getCourse/{id}','ApiController@getCourse');  
-         Route::match(['post','get'],'getCourse','ApiController@getCourse'); 
-Route::match(['post','get'],'course/delete/{id}','ApiController@deleteCourse')->where('id', '[0-9]+'); 
+        Route::match(['post','get'],'getCourse','ApiController@getCourse'); 
+        Route::match(['post','get'],'course/delete/{id}','ApiController@deleteCourse')->where('id', '[0-9]+'); 
 
         Route::match(['post','get'],'createCourseDetails','ApiController@createCourseDetails');  
 
@@ -53,8 +58,6 @@ Route::match(['post','get'],'course/delete/{id}','ApiController@deleteCourse')->
            Route::match(['post','get'],'get_condidate_record','APIController@getCondidateRecord'); 
            Route::match(['post','get'],'user/logout','ApiController@logout'); 
            Route::match(['post','get'],'change_password','ApiController@changePassword');
-           Route::match(['post','get'],'get_interviewer','ApiController@getInterviewer');
-           Route::match(['post','get'],'add_interview','ApiController@addInterview');
            Route::match(['post','get'],'user/details','ApiController@getUserDetails');
         });   
 
