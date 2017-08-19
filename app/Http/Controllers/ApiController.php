@@ -467,7 +467,6 @@ class ApiController extends Controller
     	$courses = Course::leftjoin('syllabus', 'courses.id', '=', 'syllabus.sub_course_id')
                             ->where('courses.id',$id) 
                             ->select('courses.*', 'syllabus.description')
-                            ->except('status')
                             ->first();  
         if($courses!=null){
         	$msg = "Record found";
