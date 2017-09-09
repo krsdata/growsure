@@ -47,7 +47,7 @@ Route::group(['prefix' => 'api/v1'], function()
         Route::match(['post','get'],'courseDetail/delete/{cid}/{scid}','ApiController@deleteCourseDetail')->where(['cid' => '[0-9]+', 'scid' => '[0-9]+']);
         
 
-        Route::match(['post','get'],'user/signup','ApiController@register');  
+        Route::match(['post','get'],'user/signup','ApiController@signup');  
         Route::match(['post','get'],'user/updateProfile','ApiController@updateProfile'); 
         Route::match(['post','get'],'user/login', 'ApiController@login'); 
         Route::match(['post','get'],'email_verification','ApiController@emailVerification');   

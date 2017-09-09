@@ -74,19 +74,7 @@ class ApiController extends Controller
             );
         }
 
-        $helper = new Helper;
-        $group_name =  $helper->getCorporateGroupName($input['email']);
-        $email_allow = array('gmail','yahoo','ymail','aol','hotmail');
-
-        if(in_array($group_name, $email_allow))
-        {
-           return Response::json(array(
-                'status' => 0,
-                'message' => 'Only corporate email is allowed!',
-                'data'  =>  ''
-                )
-            ); 
-        }
+       
 
         return response()->json(
                             [ 
@@ -171,14 +159,13 @@ class ApiController extends Controller
     * Calling Method : get  
     */
 
-    public function register(Request $request,User $user)
+    public function signup(Request $request,User $user)
     {   
 
-        $input['first_name']    = $request->input('first_name');
-        $input['last_name']     = $request->input('last_name'); 
+        $input['first_name']    = $request->input('firstName');
+        $input['last_name']     = $request->input('lastName'); 
         $input['email']         = $request->input('email'); 
         $input['password']      = Hash::make($request->input('password'));
-        $input['role_type']      = ($request->input('role_type'))?$request->input('role_type'):'';
          
         if($request->input('user_id')){
             $u = $this->updateProfile($request,$user);
@@ -187,6 +174,7 @@ class ApiController extends Controller
 
         //Server side valiation
         $validator = Validator::make($request->all(), [
+            'firstName' => 'required',
            'email' => 'required|email|unique:users',
             'password' => 'required'
         ]);
@@ -204,24 +192,12 @@ class ApiController extends Controller
                 )
             );
         }  
+        User::create($input);
         
-        $helper = new Helper;
-        /** --Create USER-- **/
-        $user = User::create($input); 
-        $subject = "Welcome to yellotasker! Verify your email address to get started";
-        $email_content = [
-                'receipent_email'=> $request->input('email'),
-                'subject'=>$subject,
-                'greeting'=> 'Yellotasker',
-                'first_name'=> $request->input('first_name')
-                ];
-
-        $verification_email = $helper->sendMailFrontEnd($email_content,'verification_link');
-       
         return response()->json(
                             [ 
                                 "status"=>1,
-                                "message"=>"Thank you for registration. Please verify your email.",
+                                "message"=>"Thank you for registration",
                                 'data'=>$request->except('password')
                             ]
                         );
@@ -300,15 +276,7 @@ class ApiController extends Controller
             return response()->json([ "status"=>0,"message"=>"Invalid email or password. Try again!" ,'data' => '' ]);
         }
          
-        $user = JWTAuth::toUser($token); 
-
-        $data['user_id']        = $user->id; 
-        $input['first_name']    = $request->input('first_name');
-        $input['last_name']     = $request->input('last_name'); 
-        $input['email']         = $request->input('email'); 
-        $input['password']      = Hash::make($request->input('password'));
-        $input['role_type']     = ($request->input('role_type'))?$request->input('role_type'):'';
-        $data['token']          = $token;
+        $data = JWTAuth::toUser($token);  
 
         return response()->json([ "status"=>1,"code"=>200,"message"=>"Successfully logged in." ,'data' => $data ]);
 
